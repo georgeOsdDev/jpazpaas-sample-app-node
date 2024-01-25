@@ -1,9 +1,10 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 
-const ipapi = new OpenAPIHono()
+const app = new OpenAPIHono()
 
-ipapi.openapi(
+app.openapi(
   createRoute({
+    tags: ["ip"],
     method: 'get',
     path: '/inbound',
     request: {
@@ -30,8 +31,9 @@ ipapi.openapi(
   }
 )
 
-ipapi.openapi(
+app.openapi(
   createRoute({
+    tags: ["ip"],
     method: 'get',
     path: '/outbound',
     request: {
@@ -59,4 +61,29 @@ ipapi.openapi(
   }
 )
 
-export { ipapi }
+app.openapi(
+  createRoute({
+    tags: ["ip"],
+    method: 'get',
+    path: '/private',
+    request: {
+    },
+    responses: {
+      200: {
+        description: 'Respond a private ip address of this server',
+        content: {
+          'application/json': {
+            schema: z.strictObject({
+              WEBSITE_PRIVATE_IP: z.string()
+            })
+          }
+        }
+      }
+    }
+  }),
+  (c) => {
+    return c.json({"WEBSITE_PRIVATE_IP":process.env['WEBSITE_PRIVATE_IP'] || "not set"})
+  }
+)
+
+export default app

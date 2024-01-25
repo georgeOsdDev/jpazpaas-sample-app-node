@@ -7,9 +7,7 @@ import type { FC } from 'hono/jsx'
 import { prettyJSON } from 'hono/pretty-json'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { swaggerUI } from '@hono/swagger-ui'
-import { miscapi } from './routes/misc'
-import { ipapi } from './routes/ip'
-import { requestapi } from './routes/request'
+import routes from './routes/'
 
 const app = new OpenAPIHono()
 
@@ -27,7 +25,7 @@ app.get(
 
 app.doc('/doc', {
   info: {
-    title: 'An API',
+    title: 'My API',
     version: 'v1'
   },
   openapi: '3.1.0'
@@ -68,9 +66,10 @@ app.get('/', (c) => {
 })
 
 
-app.route('/misc', miscapi)
-app.route('/ip', ipapi)
-app.route('/request', requestapi)
+app.route('/file', routes.file)
+app.route('/ip', routes.ip)
+app.route('/misc', routes.misc)
+app.route('/request', routes.request)
 
 
 const port: number = Number(process.env.PORT) || 3000;

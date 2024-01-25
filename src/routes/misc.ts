@@ -1,9 +1,10 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 
-const miscapi = new OpenAPIHono()
+const app = new OpenAPIHono()
 
-miscapi.openapi(
+app.openapi(
   createRoute({
+    tags: ["misc"],
     method: 'get',
     path: '/echo/{text}',
     request: {
@@ -39,8 +40,9 @@ miscapi.openapi(
   }
 )
 
-miscapi.openapi(
+app.openapi(
   createRoute({
+    tags: ["misc"],
     method: 'get',
     path: '/wait/{ms}',
     request: {
@@ -90,8 +92,9 @@ miscapi.openapi(
 )
 
 
-miscapi.openapi(
+app.openapi(
   createRoute({
+    tags: ["misc"],
     method: 'get',
     path: '/exception',
     request: {
@@ -113,4 +116,4 @@ miscapi.openapi(
 )
 
 
-export { miscapi }
+export default app

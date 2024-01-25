@@ -1,7 +1,7 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { Context } from 'hono';
 
-const requestapi = new OpenAPIHono()
+const app = new OpenAPIHono()
 
 const handler = async (c:Context) => {
   const headers: Record<string, string> = {};
@@ -20,8 +20,9 @@ const handler = async (c:Context) => {
   })
 }
 
-requestapi.openapi(
+app.openapi(
   createRoute({
+    tags: ["request"],
     method: 'get',
     path: '/request/dump',
     request: {
@@ -43,8 +44,9 @@ requestapi.openapi(
   handler
 )
 
-requestapi.openapi(
+app.openapi(
   createRoute({
+    tags: ["request"],
     method: 'post',
     path: '/request/dump',
     request: {
@@ -83,4 +85,4 @@ requestapi.openapi(
 )
 
 
-export { requestapi }
+export default app
