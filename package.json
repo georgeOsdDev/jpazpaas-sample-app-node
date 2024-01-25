@@ -1,13 +1,14 @@
 {
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "start": "node --import tsx ./src/index.tsx"
+    "start": "ts-node ./src/index.tsx"
   },
   "dependencies": {
     "@hono/node-server": "^1.4.1",
     "@hono/swagger-ui": "^0.2.1",
     "@hono/zod-openapi": "^0.9.5",
-    "hono": "^3.12.6"
+    "hono": "^3.12.6",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.5",
