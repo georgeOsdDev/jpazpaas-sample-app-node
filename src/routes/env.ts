@@ -1,7 +1,7 @@
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
+import { basicAuth } from 'hono/basic-auth'
 
 const app = new OpenAPIHono()
-
 app.openapi(
   createRoute({
     tags: ["env"],
@@ -18,10 +18,15 @@ app.openapi(
           }
         }
       }
-    }
+    },
   }),
   (c) => {
-    return c.json(process.env)
+    // super simple check
+    const code = c.req.query('code')
+    if (code === 'secret') {
+      return c.json(process.env)
+    } else
+      return c.json({error: 'code is not correct'}, 401)
   }
 )
 
@@ -46,11 +51,16 @@ app.openapi(
           }
         }
       }
-    }
+    },
   }),
   (c) => {
-    return c.json({[c.req.param('key')]: process.env[c.req.param('key')]})
-  }
+    // super simple check
+    const code = c.req.query('code')
+    if (code === 'secret') {
+      return c.json({[c.req.param('key')]: process.env[c.req.param('key')]})
+    } else
+      return c.json({error: 'code is not correct'}, 401)
+  },
 )
 
 export default app
