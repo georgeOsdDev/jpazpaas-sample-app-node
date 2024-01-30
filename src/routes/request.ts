@@ -4,8 +4,6 @@ import { Context } from 'hono';
 const app = new OpenAPIHono()
 
 const handler = async (c:Context) => {
-  const headers: Record<string, string> = {};
-  Object.entries(c.req.raw.headers).forEach(([k, v]) => headers[k] = v);
   let body;
   if (c.req.header('content-type') === 'application/json') {
     body = await c.req.json()
@@ -15,7 +13,8 @@ const handler = async (c:Context) => {
     body = await c.req.text()
   }
   return c.json({
-    'headers': headers,
+    'queries': c.req.query(),
+    'headers': c.req.header(),
     'body': body,
   })
 }
@@ -24,7 +23,7 @@ app.openapi(
   createRoute({
     tags: ["request"],
     method: 'get',
-    path: '/request/dump',
+    path: '/dump',
     request: {
     },
     responses: {
@@ -33,6 +32,7 @@ app.openapi(
         content: {
           'application/json': {
             schema: z.strictObject({
+              "queries": z.strictObject({}),
               "headers":  z.strictObject({}),
               "body": z.strictObject({}),
             })
@@ -48,20 +48,12 @@ app.openapi(
   createRoute({
     tags: ["request"],
     method: 'post',
-    path: '/request/dump',
+    path: '/dumpJson',
     request: {
       body: {
         content: {
           'application/json': {
             schema: z.object({
-              name: z.string(),
-              age: z.number(),
-            }),
-          },
-          'application/x-www-form-urlencoded': {
-            schema: z.object({
-              name: z.string(),
-              age: z.number(),
             }),
           },
         },
@@ -73,6 +65,7 @@ app.openapi(
         content: {
           'application/json': {
             schema: z.strictObject({
+              "queries": z.strictObject({}),
               "headers":  z.strictObject({}),
               "body": z.strictObject({}),
             })
@@ -84,5 +77,37 @@ app.openapi(
   handler
 )
 
+app.openapi(
+  createRoute({
+    tags: ["request"],
+    method: 'post',
+    path: '/dumpForm',
+    request: {
+      body: {
+        content: {
+          'application/x-www-form-urlencoded': {
+            schema: z.object({
+            }),
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: 'Dump raw request',
+        content: {
+          'application/json': {
+            schema: z.strictObject({
+              "queries": z.strictObject({}),
+              "headers":  z.strictObject({}),
+              "body": z.strictObject({}),
+            })
+          }
+        }
+      }
+    }
+  }),
+  handler
+)
 
 export default app
