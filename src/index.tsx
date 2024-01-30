@@ -70,6 +70,11 @@ app.route('/file', routes.file)
 app.route('/ip', routes.ip)
 app.route('/misc', routes.misc)
 app.route('/request', routes.request)
+app.route('/env', routes.env)
+app.route('/httpstatus', routes.httpstatus)
+app.route('/cookie', routes.cookie)
+app.route('/proxy', routes.proxy)
+app.route('/bench', routes.bench)
 
 
 const port: number = Number(process.env.PORT) || 3000;
