@@ -7,6 +7,7 @@ import httpstatus from './httpstatus';
 import cookie from './cookie';
 import proxy from './proxy';
 import bench from './bench';
+import stream from './stream';
 
 export default {
   env,
@@ -17,5 +18,6 @@ export default {
   httpstatus,
   cookie,
   proxy,
-  bench
+  bench,
+  stream
 }

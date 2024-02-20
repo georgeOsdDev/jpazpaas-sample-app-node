@@ -4,6 +4,7 @@ import { poweredBy } from 'hono/powered-by'
 import { logger } from 'hono/logger'
 import { css, Style } from 'hono/css'
 import type { FC } from 'hono/jsx'
+import { streamText } from "hono/streaming";
 import { prettyJSON } from 'hono/pretty-json'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { swaggerUI } from '@hono/swagger-ui'
@@ -75,6 +76,7 @@ app.route('/httpstatus', routes.httpstatus)
 app.route('/cookie', routes.cookie)
 app.route('/proxy', routes.proxy)
 app.route('/bench', routes.bench)
+app.route('/stream', routes.stream)
 
 
 const port: number = Number(process.env.PORT) || 3000;
