@@ -23,7 +23,7 @@ app.openapi(
   (c) => {
     // super simple check
     const code = c.req.query('code')
-    if (code === 'secret') {
+    if (code === process.env['env_code']) {
       return c.json(process.env)
     } else
       return c.json({error: 'code is not correct'}, 401)
@@ -56,7 +56,7 @@ app.openapi(
   (c) => {
     // super simple check
     const code = c.req.query('code')
-    if (code === 'secret') {
+    if (code === process.env['env_code']) {
       return c.json({[c.req.param('key')]: process.env[c.req.param('key')]})
     } else
       return c.json({error: 'code is not correct'}, 401)

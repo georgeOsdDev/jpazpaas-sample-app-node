@@ -57,4 +57,33 @@ app.openapi(
     await stream.write( `Bye! It is ${new Date().toISOString()}`)
   })
 })
+
+app.openapi(
+  createRoute({
+    tags: ["stream"],
+    method: 'get',
+    path: '/text/keepalive/{times}',
+    request: {
+    },
+    responses: {
+      200: {
+        description: 'Respond a message',
+      }
+    }
+  }),
+  (c) => {
+  const waitms: number = isNaN(Number(c.req.param('times'))) ? 1000 : Number(c.req.param('times'))
+  return streamText(c, async (stream) => {
+    await stream.writeln(`Hello! It is ${new Date().toISOString()}`)
+    const times: number = isNaN(Number(c.req.param('times'))) ? 10 : Number(c.req.param('times'))
+    let id = 0
+    while (id < times) {
+      await stream.writeln(String(id++)) // Keep alive (write a new line).
+      await stream.sleep(1000)
+    }
+    // Write a text without a new line.
+    await stream.write( `Bye! It is ${new Date().toISOString()}`)
+  })
+})
+
 export default app

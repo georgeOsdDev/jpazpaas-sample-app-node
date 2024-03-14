@@ -8,6 +8,8 @@ import cookie from './cookie';
 import proxy from './proxy';
 import bench from './bench';
 import stream from './stream';
+import healthcheck from './healthcheck';
+import redirect from './redirect';
 
 export default {
   env,
@@ -19,5 +21,7 @@ export default {
   cookie,
   proxy,
   bench,
-  stream
+  stream,
+  healthcheck,
+  redirect
 }

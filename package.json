@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch src/index.tsx",
     "start": "ts-node ./src/index.tsx"
   },
   "dependencies": {
@@ -8,6 +8,7 @@
     "@hono/swagger-ui": "^0.2.1",
     "@hono/zod-openapi": "^0.9.5",
     "hono": "^3.12.6",
+    "npm": "^10.4.0",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {

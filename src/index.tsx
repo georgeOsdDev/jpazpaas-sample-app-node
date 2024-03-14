@@ -15,6 +15,14 @@ const app = new OpenAPIHono()
 app.use('/static/*', serveStatic({ root: './' }))
 app.use('*', poweredBy())
 app.use('*', logger())
+
+app.use(async (c, next) => {
+  console.log("↓↓↓===Header Dump===↓↓↓")
+  console.log(c.req.header())
+  console.log("↑↑↑===Header Dump===↑↑↑")
+  await next()
+})
+
 // app.use('*', prettyJSON())
 app.notFound((c) => c.json({ message: 'Not Found', ok: false }, 404))
 app.get(
@@ -77,6 +85,9 @@ app.route('/cookie', routes.cookie)
 app.route('/proxy', routes.proxy)
 app.route('/bench', routes.bench)
 app.route('/stream', routes.stream)
+app.route('/healthcheck', routes.healthcheck)
+app.route('/redirect', routes.redirect)
+console.log("routes", Object.keys(routes))
 
 
 const port: number = Number(process.env.PORT) || 3000;
