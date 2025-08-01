@@ -14,7 +14,17 @@ app.openapi(
         description: 'Respond all environment value',
         content: {
           'application/json': {
-            schema: z.strictObject({})
+            schema: z.record(z.string(), z.string().optional())
+          }
+        }
+      },
+      401: {
+        description: 'Unauthorized',
+        content: {
+          'application/json': {
+            schema: z.strictObject({
+              error: z.string()
+            })
           }
         }
       }
@@ -24,7 +34,7 @@ app.openapi(
     // super simple check
     const code = c.req.query('code')
     if (code === process.env['env_code']) {
-      return c.json(process.env)
+      return c.json(process.env, 200)
     } else
       return c.json({error: 'code is not correct'}, 401)
   }
@@ -50,6 +60,16 @@ app.openapi(
             schema: z.strictObject({})
           }
         }
+      },
+      401: {
+        description: 'Unauthorized',
+        content: {
+          'application/json': {
+            schema: z.strictObject({
+              error: z.string()
+            })
+          }
+        }
       }
     },
   }),
@@ -57,7 +77,7 @@ app.openapi(
     // super simple check
     const code = c.req.query('code')
     if (code === process.env['env_code']) {
-      return c.json({[c.req.param('key')]: process.env[c.req.param('key')]})
+      return c.json({[c.req.param('key')]: process.env[c.req.param('key')]}, 200)
     } else
       return c.json({error: 'code is not correct'}, 401)
   },

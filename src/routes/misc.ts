@@ -34,7 +34,7 @@ app.openapi(
     }
   }),
   (c) => {
-    return c.jsonT({
+    return c.json({
       message: c.req.param('text')
     })
   }
@@ -112,6 +112,31 @@ app.openapi(
   }),
   (c) => {
     throw Error("Hello Exception")
+  }
+)
+
+app.openapi(
+  createRoute({
+    tags: ["misc"],
+    method: 'get',
+    path: '/logging',
+    request: {
+    },
+    responses: {
+      200: {
+        description: 'Respond ok',
+      }
+    }
+  }),
+  (c) => {
+    console.log("console.log message")
+    console.trace("console.tace message")
+    console.debug("console.debug message")
+    console.info("console.info message")
+    console.warn("console.warn message")
+    console.error("console.error message")
+    console.assert(false, "console.assert false message")
+    return c.text("Hello Logging")
   }
 )
 

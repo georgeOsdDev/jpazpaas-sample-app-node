@@ -16,7 +16,7 @@ const handler = async (c:Context) => {
     'queries': c.req.query(),
     'headers': c.req.header(),
     'body': body,
-  })
+  }, 200)
 }
 
 app.openapi(

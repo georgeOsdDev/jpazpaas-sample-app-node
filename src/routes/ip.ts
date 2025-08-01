@@ -24,7 +24,7 @@ app.openapi(
     }
   }),
   (c) => {
-    return c.jsonT({
+    return c.json({
       'X-Azure-ClientIP':c.req.header('X-Azure-ClientIP') || 'not set',
       'X-Forwarded-For':c.req.header('X-Forwarded-For') || 'not set'
     })

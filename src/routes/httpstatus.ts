@@ -45,7 +45,7 @@ app.openapi(
         error: 'RangeError: init["status"] must be in the range of 200 to 599.'
       }, 500)
     }
-    return c.json({message: `resoponded with ${code}`}, code)
+    return c.json({message: `resoponded with ${code}`}, code as 200)
   }
 )
 
