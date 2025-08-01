@@ -10,6 +10,7 @@ import bench from './bench';
 import stream from './stream';
 import healthcheck from './healthcheck';
 import redirect from './redirect';
+import websocket from './websocket';
 
 export default {
   env,
@@ -23,5 +24,6 @@ export default {
   bench,
   stream,
   healthcheck,
-  redirect
+  redirect,
+  websocket
 }

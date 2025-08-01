@@ -5,6 +5,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.10.1",
+    "@hono/node-ws": "^1.2.0",
     "@hono/swagger-ui": "^0.2.1",
     "@hono/zod-openapi": "^0.9.5",
     "hono": "^4.8.10",

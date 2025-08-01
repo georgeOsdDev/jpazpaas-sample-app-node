@@ -4,22 +4,23 @@ import { poweredBy } from 'hono/powered-by'
 import { logger } from 'hono/logger'
 import { css, Style } from 'hono/css'
 import type { FC } from 'hono/jsx'
-import { streamText } from "hono/streaming";
-import { prettyJSON } from 'hono/pretty-json'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { swaggerUI } from '@hono/swagger-ui'
+import { createNodeWebSocket } from '@hono/node-ws'
 import routes from './routes/'
 
 const app = new OpenAPIHono()
-
+const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app })
 app.use('/static/*', serveStatic({ root: './' }))
 app.use('*', poweredBy())
 app.use('*', logger())
 
 app.use(async (c, next) => {
-  console.log("↓↓↓===Header Dump===↓↓↓")
-  console.log(c.req.header())
-  console.log("↑↑↑===Header Dump===↑↑↑")
+  if (process.env.loghttpheader) {
+    console.log("↓↓↓===Header Dump===↓↓↓")
+    console.log(c.req.header())
+    console.log("↑↑↑===Header Dump===↑↑↑")
+  }
   await next()
 })
 
@@ -39,7 +40,6 @@ app.doc('/doc', {
   },
   openapi: '3.1.0'
 })
-
 
 const Layout: FC = (props) => {
   const bodyClass = css`
@@ -69,11 +69,42 @@ const Top: FC<{ messages: string[] }> = (props: { messages: string[] }) => {
     </Layout>
   )
 }
-app.get('/', (c) => {
+
+const wait = async (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+app.get('/', async (c) => {
+  // await wait(1000);
   const messages = ['Good Morning', 'Good Evening', 'Good Night']
   return c.html(<Top messages={messages} />)
 })
 
+let wsClientCount = 0;
+app.get('/ws', upgradeWebSocket((c) => {
+    wsClientCount++;
+    console.log(`WebSocket client connected. Total clients: ${wsClientCount}`);
+
+    return {
+      onOpen: (event, ws) => {
+        console.log('WebSocket connection opened');
+        ws.send(`Welcome! You are connected to the WebSocket server.Total clients: ${wsClientCount}`);
+      },
+      onMessage(event, ws) {
+        console.log(`Message from client: ${event.data}`);
+        // Echo the message back with a server prefix
+        ws.send(`Server received: ${event.data}`);
+      },
+      onClose: () => {
+        wsClientCount--;
+        console.log(`WebSocket client disconnected. Total clients: ${wsClientCount}`);
+      },
+      onError: (event, ws) => {
+        console.log('WebSocket error:', event);
+      }
+    }
+  })
+)
 
 app.route('/file', routes.file)
 app.route('/ip', routes.ip)
@@ -87,13 +118,15 @@ app.route('/bench', routes.bench)
 app.route('/stream', routes.stream)
 app.route('/healthcheck', routes.healthcheck)
 app.route('/redirect', routes.redirect)
+app.route('/websocket', routes.websocket)
 console.log("routes", Object.keys(routes))
 
 
 const port: number = Number(process.env.PORT) || 3000;
 console.log(`Server is running on port ${port}`)
 
-serve({
+const server = serve({
   fetch: app.fetch,
   port,
 })
+injectWebSocket(server)
