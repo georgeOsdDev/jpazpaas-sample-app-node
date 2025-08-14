@@ -1,7 +1,7 @@
 FROM node:alpine
 
 COPY sshd_config /etc/ssh/
-COPY entrypoint.sh ./
+COPY entrypoint.sh /
 RUN chmod +x entrypoint.sh
 
 # Start and enable SSH
@@ -15,4 +15,4 @@ WORKDIR /app
 COPY ./ /app
 RUN npm install
 
-ENTRYPOINT [ "./entrypoint.sh" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
