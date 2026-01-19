@@ -140,5 +140,54 @@ app.openapi(
   }
 )
 
+app.openapi(
+  createRoute({
+    tags: ["misc"],
+    method: 'get',
+    path: '/response/bytes/{bytes}',
+    request: {
+      params: z.object({
+        bytes: z
+          .string()
+          .optional()
+          .default('1024')
+          .openapi({
+            param: {
+              name: 'bytes',
+              in: 'path',
+            },
+            example: '1024',
+            description: 'Size of the response in bytes (default: 1024)',
+          }),
+      }),
+    },
+    responses: {
+      200: {
+        description: 'Respond a random string of specified bytes',
+        content: {
+          'application/json': {
+            schema: z.strictObject({
+              bytes: z.number(),
+              data: z.string()
+            })
+          }
+        }
+      }
+    }
+  }),
+  (c) => {
+    const bytes: number = isNaN(Number(c.req.param('bytes'))) ? 1024 : Number(c.req.param('bytes'))
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    let result = ''
+    for (let i = 0; i < bytes; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    return c.json({
+      bytes: bytes,
+      data: result
+    })
+  }
+)
+
 
 export default app
