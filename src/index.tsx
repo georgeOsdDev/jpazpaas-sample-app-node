@@ -119,6 +119,7 @@ app.route('/stream', routes.stream)
 app.route('/healthcheck', routes.healthcheck)
 app.route('/redirect', routes.redirect)
 app.route('/websocket', routes.websocket)
+app.route('/aca', routes.aca)
 console.log("routes", Object.keys(routes))
 
 

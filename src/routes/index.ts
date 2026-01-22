@@ -11,6 +11,7 @@ import stream from './stream';
 import healthcheck from './healthcheck';
 import redirect from './redirect';
 import websocket from './websocket';
+import aca from './aca';
 
 export default {
   env,
@@ -25,5 +26,6 @@ export default {
   stream,
   healthcheck,
   redirect,
-  websocket
+  websocket,
+  aca
 }
