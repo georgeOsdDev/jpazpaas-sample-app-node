@@ -8,7 +8,7 @@
     "@hono/node-ws": "^1.2.0",
     "@hono/swagger-ui": "^0.2.1",
     "@hono/zod-openapi": "^0.9.5",
-    "hono": "^4.11.4",
+    "hono": "^4.11.7",
     "npm": "^11.8.0",
     "ts-node": "^10.9.2"
   },
