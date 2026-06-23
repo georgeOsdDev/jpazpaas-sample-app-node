@@ -9,7 +9,7 @@
     "@hono/swagger-ui": "^0.2.1",
     "@hono/zod-openapi": "^0.9.5",
     "hono": "^4.12.14",
-    "npm": "^11.12.1",
+    "npm": "^11.17.0",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
