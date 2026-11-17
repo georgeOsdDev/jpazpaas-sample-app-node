@@ -124,6 +124,31 @@ docker build -t sample-app .
 docker run -p 8080:8080 sample-app
 ```
 
+### OpenSSH security updates
+
+The image preserves Node.js 25.4.0 and Alpine 3.23 to avoid an unrelated
+runtime upgrade. Node.js 25 is end-of-life; migrate to a supported Node.js
+release separately.
+
+SSH on port 2222, password authentication, and the existing App Service SSH
+integration remain enabled. The Dockerfile requires OpenSSH `10.2_p1-r1`
+or later, which includes Alpine 3.23's fix for the musl password
+authentication bypass. Do not remove this minimum version.
+
+Rebuild with fresh package indexes and publish under a new tag:
+
+```bash
+docker build --pull --no-cache -t <registry>/honoapp:<new-tag> .
+docker run --rm --entrypoint /bin/sh <registry>/honoapp:<new-tag> \
+  -c 'apk info -v | grep "^openssh-server-"; /usr/sbin/sshd -t'
+docker push <registry>/honoapp:<new-tag>
+```
+
+Update every consuming App Service and Container App to the new tag.
+Publishing an image alone does not update running containers. Preserve stopped
+applications' state unless startup is explicitly intended. Keep the previous
+image for rollback, and check Defender's reassessment after deployment.
+
 ## Azure App Service Deployment
 
 This application is configured for Azure App Service deployment with:
